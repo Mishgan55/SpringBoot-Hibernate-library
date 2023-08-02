@@ -1,0 +1,115 @@
+package khorsun.hibernate.library.SpringBootHibernatelibrary.controllers;
+
+
+
+import khorsun.hibernate.library.SpringBootHibernatelibrary.models.Book;
+import khorsun.hibernate.library.SpringBootHibernatelibrary.models.Person;
+import khorsun.hibernate.library.SpringBootHibernatelibrary.services.BookService;
+import khorsun.hibernate.library.SpringBootHibernatelibrary.services.PersonService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
+import javax.validation.Valid;
+import java.util.Optional;
+
+@Controller
+@RequestMapping("/book")
+public class BookController {
+
+    private final BookService bookService;
+    private final PersonService personService;
+    @Autowired
+    public BookController(BookService bookService, PersonService personService) {
+        this.bookService = bookService;
+        this.personService = personService;
+    }
+
+
+    @GetMapping()
+    public String index(Model model, @RequestParam(value="page",required = false)Integer page,
+      @RequestParam(value = "books_per_page",required = false)Integer booksPerPage,
+      @RequestParam(value = "sort_by_year",required = false)boolean sortByYear){
+        if (booksPerPage==null||page==null){
+            model.addAttribute("books",bookService.findAllBooks(sortByYear));
+        }
+        else {
+            model.addAttribute("books",bookService.findAllBooksWithPagination(page,booksPerPage,sortByYear));
+        }
+
+        return "book/index";
+    }
+    @GetMapping("/{id}")
+    public String showBook(@PathVariable("id")int id, Model model,
+                           @ModelAttribute("person")Person person){
+        model.addAttribute("book",bookService.findOneBook(id));
+
+        Optional<Person> owner = Optional.ofNullable(bookService.getBookOwner(id));
+
+        if (owner.isPresent()){
+            model.addAttribute("owner",owner.get());
+        }else {
+            model.addAttribute("people",personService.findAll());
+        }
+        return "book/show";
+    }
+    @GetMapping("/new")
+    public String formForCreatingBook(@ModelAttribute("book") Book book){
+        return "book/new";
+    }
+    @PostMapping()
+    public String createBook(@ModelAttribute("book")@Valid Book book,
+                             BindingResult bindingResult){
+        if (bindingResult.hasErrors()){
+            return "book/new";}
+                    bookService.createBook(book);
+        return "redirect:/book";
+    }
+    @GetMapping("/{id}/edit")
+    public String formForUpdatingBook(@PathVariable("id")int id,Model model){
+        model.addAttribute("book",bookService.findOneBook(id));
+        return "book/edit";
+    }
+    @PatchMapping("/{id}")
+    public String updateBook(@PathVariable("id")int id , @ModelAttribute("book")@Valid Book book,
+                             BindingResult bindingResult){
+        if (bindingResult.hasErrors()){
+            return "book/edit";}
+        bookService.update(id,book);
+        return "redirect:/book";
+    }
+    @DeleteMapping("/{id}")
+    public String deleteBook(@PathVariable("id")int id){
+        bookService.delete(id);
+        return "redirect:/book";
+    }
+    @PatchMapping("/{id}/release")
+    public String releaseBook(@PathVariable("id")int id){
+        bookService.release(id);
+        return "redirect:/book/"+id;
+    }
+    @PatchMapping("/{id}/assign")
+    public String assignBook(@PathVariable("id")int id,@ModelAttribute("person")Person person){
+        bookService.assign(id, person);
+        return "redirect:/book/"+id;
+    }
+    @GetMapping("/search")
+    public String searchBook(){
+        return "book/search";
+    }
+    @PostMapping("/search")
+    public String createSearch(@RequestParam("request")String titleForSearch,Model model){
+        model.addAttribute("book",bookService.findBookByRequest(titleForSearch));
+        return "book/search";
+    }
+}
