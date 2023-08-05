@@ -24,13 +24,14 @@ public class SecurityConfiguration {
 
         http
                 .authorizeRequests()// не аутефицированный пользователь
+                .antMatchers("/book").hasAnyRole("USER","ADMIN")
                 .antMatchers("/auth/login","/auth/registration","/error").permitAll()// пускаем его на эту страницу
-                .anyRequest().authenticated()//для всех других запросов пользователь должен быть аутенфицирован
+                .anyRequest().hasRole("ADMIN")
                 .and()
                 .formLogin() // форма для логина
                 .loginPage("/auth/login")// по какой ссылке переходим
                 .loginProcessingUrl("/process_login")// указываем на какую сслыку переходим при сабмите формы
-                .defaultSuccessUrl("/people",true)//после успешной аунтефикации перенапрваление на страницу
+                .defaultSuccessUrl("/book",true)//после успешной аунтефикации перенапрваление на страницу
                 .failureUrl("/auth/login?error")
                 .and()
                 .logout()

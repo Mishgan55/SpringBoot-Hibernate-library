@@ -20,7 +20,9 @@ private final PasswordEncoder passwordEncoder;
     }
     @Transactional
     public void registrationPerson(Person person){
+        person.setRole("ROLE_USER");
         person.setPassword(passwordEncoder.encode(person.getPassword()));
         personRepository.save(person);
+
     }
 }

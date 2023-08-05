@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -35,8 +36,11 @@ public class Person {
   //  @Pattern(regexp = "\\w{0,100}", message ="Invalid password type")
     @Column(name = "password")
     private String password;
+    @Column(name ="role")
+    private String role;
     @OneToMany(mappedBy = "person")
     private List<Book> book;
+
 
     public Person() {
     }
@@ -44,6 +48,14 @@ public class Person {
     public Person(String fullName, int yearOfBirth) {
         this.fullName = fullName;
         this.yearOfBirth = yearOfBirth;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getLogin() {
