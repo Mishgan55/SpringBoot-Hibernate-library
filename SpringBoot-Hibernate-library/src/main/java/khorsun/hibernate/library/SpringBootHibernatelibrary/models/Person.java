@@ -21,15 +21,18 @@ public class Person {
     @Column(name="id")
     private int id;
     @Column(name = "full_name")
-   // @NotEmpty(message = "Should not be empty")
-   // @Size(min = 2, max = 100, message = "Name should be between 2 and 100 characters")
-   // @Pattern(regexp = "[A-Z]\\w+ [A-Z]\\w+", message = "Name Surname")
     private String fullName;
     @Column(name = "year_of_birth")
    // @Min(value = 1900,message = "Year should be greater then 1900")
     private int yearOfBirth;
+     @NotEmpty(message = "Login should not be empty")
+   //  @Size(min = 2, max = 30, message = "Login should be between 2 and 30 characters")
+  //   @Pattern(regexp = "\\w{0,30}", message ="Invalid login type")
     @Column(name = "login")
     private String login;
+    @NotEmpty(message = "Password should not be empty")
+   // @Size(min = 2, max = 100, message = "Password should be between 2 and 30 characters")
+  //  @Pattern(regexp = "\\w{0,100}", message ="Invalid password type")
     @Column(name = "password")
     private String password;
     @OneToMany(mappedBy = "person")

@@ -48,6 +48,9 @@ public class PersonService {
             return Collections.emptyList();
         }
     }
+    public Optional<Person> findPersonByLogin(String login){
+        return  personRepository.findPersonByLogin(login);
+    }
     @Transactional
     public void create(Person person){
         personRepository.save(person);
