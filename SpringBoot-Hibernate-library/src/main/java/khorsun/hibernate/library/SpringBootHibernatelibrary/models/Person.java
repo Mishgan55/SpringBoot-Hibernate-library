@@ -21,13 +21,17 @@ public class Person {
     @Column(name="id")
     private int id;
     @Column(name = "full_name")
-    @NotEmpty(message = "Should not be empty")
-    @Size(min = 2, max = 100, message = "Name should be between 2 and 100 characters")
-    @Pattern(regexp = "[A-Z]\\w+ [A-Z]\\w+", message = "Name Surname")
+   // @NotEmpty(message = "Should not be empty")
+   // @Size(min = 2, max = 100, message = "Name should be between 2 and 100 characters")
+   // @Pattern(regexp = "[A-Z]\\w+ [A-Z]\\w+", message = "Name Surname")
     private String fullName;
     @Column(name = "year_of_birth")
-    @Min(value = 1900,message = "Year should be greater then 1900")
+   // @Min(value = 1900,message = "Year should be greater then 1900")
     private int yearOfBirth;
+    @Column(name = "login")
+    private String login;
+    @Column(name = "password")
+    private String password;
     @OneToMany(mappedBy = "person")
     private List<Book> book;
 
@@ -37,6 +41,22 @@ public class Person {
     public Person(String fullName, int yearOfBirth) {
         this.fullName = fullName;
         this.yearOfBirth = yearOfBirth;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public List<Book> getBook() {
