@@ -35,3 +35,4 @@ The user can only create a new account and log in to his account and view page f
 if the book is overdue, then it is displayed in red
 
   http://localhost:8080/people/{id}/delete    We can delete user from DB
+#### 1 pull request
