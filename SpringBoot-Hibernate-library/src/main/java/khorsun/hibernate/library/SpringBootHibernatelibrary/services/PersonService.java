@@ -64,7 +64,6 @@ public class PersonService {
     public void delete(int id){
         personRepository.deleteById(id);
     }
-//method for PersonValidator
     public Optional<Person> findByName(String fullName){
         return personRepository.findPersonByFullName(fullName);
     }
